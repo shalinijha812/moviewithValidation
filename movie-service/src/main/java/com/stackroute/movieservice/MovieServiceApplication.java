@@ -11,30 +11,8 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 
 @SpringBootApplication
-public class MovieServiceApplication implements  ApplicationListener<ContextRefreshedEvent>, CommandLineRunner {
+public class MovieServiceApplication  {
 
-	MovieRepository movieRepository;
-
-	@Autowired
-	public MovieServiceApplication(MovieRepository movieRepository) {
-		this.movieRepository = movieRepository;
-	}
-
-	@Override
-	public void run(String... args) throws Exception {
-		Movie movie = new Movie(4, "Titanic", "English", "Ultimate movie");
-		movieRepository.save(movie);
-	}
-
-	@Override
-	public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
-		Movie movie = new Movie(1, "3idiots", "hindi", "best movie");
-		movieRepository.save(movie);
-		movie = new Movie(2, "Guru", "hindi", "avg movie");
-		movieRepository.save(movie);
-		movie = new Movie(3, "Dangal", "hindi", "awesome movie");
-		movieRepository.save(movie);
-	}
 	public static void main(String[] args) {
 		SpringApplication.run(MovieServiceApplication.class, args);
 	}

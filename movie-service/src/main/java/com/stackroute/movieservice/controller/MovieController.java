@@ -28,11 +28,11 @@ public class MovieController {
         ResponseEntity responseEntity;
         try {
             Movie savedMovie = movieService.saveMovie(movie);
-            responseEntity = new ResponseEntity<Movie>(savedMovie, HttpStatus.OK);
+            responseEntity = new ResponseEntity<Movie>(savedMovie, HttpStatus.CREATED);
         }
         catch(MovieAlreadyExistsException e)
         {
-            responseEntity=new ResponseEntity<String>(e.getMessage(),HttpStatus.OK);
+            responseEntity=new ResponseEntity<String>(e.getMessage(),HttpStatus.CONFLICT);
         }
         return responseEntity;
     }
@@ -53,11 +53,11 @@ public class MovieController {
         try {
 
             Movie updatedMovie = movieService.updateComments(id, comments);
-            responseEntity = new ResponseEntity<Movie>(updatedMovie, HttpStatus.OK);
+            responseEntity = new ResponseEntity<Movie>(updatedMovie, HttpStatus.CREATED);
         }
         catch(MovieNotFoundException e)
         {
-            responseEntity=new ResponseEntity<String>(e.getMessage(),HttpStatus.OK);
+            responseEntity=new ResponseEntity<String>(e.getMessage(),HttpStatus.CONFLICT);
         }
         return responseEntity;
     }
@@ -80,7 +80,7 @@ public class MovieController {
         }
         catch(MovieNotFoundException e)
         {
-            responseEntity=new ResponseEntity<String>(e.getMessage(),HttpStatus.OK);
+            responseEntity=new ResponseEntity<String>(e.getMessage(),HttpStatus.CONFLICT);
         }
         return responseEntity;
     }
@@ -103,7 +103,7 @@ public class MovieController {
         }
         catch(MovieNotFoundException e)
         {
-            responseEntity=new ResponseEntity<String>(e.getMessage(),HttpStatus.OK);
+            responseEntity=new ResponseEntity<String>(e.getMessage(),HttpStatus.CONFLICT);
         }
 
         return responseEntity;
