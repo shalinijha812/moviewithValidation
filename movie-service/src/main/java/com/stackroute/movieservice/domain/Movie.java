@@ -4,6 +4,8 @@ package com.stackroute.movieservice.domain;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 
 @Document
@@ -11,8 +13,12 @@ public class Movie {
 
     @Id
     private int id;
+    @NotNull
+    @Size(min=2, message="Title should have atleast 2 characters")
     private String title;
     private String language;
+    @NotNull
+    @Size(min=5, message="Comment  should have atleast 5 characters")
     private String comments;
 
     public Movie(int id, String title, String language, String comments) {
