@@ -23,16 +23,16 @@ public class MovieServiceImpl implements MovieService{
     }
 
     @Override
-    public Movie saveMovie(Movie movie) throws MovieAlreadyExistsException {
+    public Movie insertMovie(Movie movie) throws MovieAlreadyExistsException {
         if (movieRepository.existsById(movie.getId())) {
             throw new MovieAlreadyExistsException("movie already exists");
         }
 
-        Movie savedMovie = movieRepository.save(movie);
-        if (savedMovie == null) {
+        Movie insertdMovie = movieRepository.insert(movie);
+        if (insertdMovie == null) {
             throw new MovieAlreadyExistsException("movie already exists");
         }
-        return savedMovie;
+        return insertdMovie;
     }
 
 //            else
@@ -62,8 +62,8 @@ public class MovieServiceImpl implements MovieService{
            if (movieRepository.existsById(id)) {
                Movie updatedMovie = movieRepository.findById(id).get();
                updatedMovie.setComments(comments);
-               Movie updatedSavedMovie = movieRepository.save(updatedMovie);
-               return updatedSavedMovie;
+               Movie updatedInsertdMovie = movieRepository.insert(updatedMovie);
+               return updatedInsertdMovie;
 
            }
            else
@@ -74,7 +74,8 @@ public class MovieServiceImpl implements MovieService{
 
     @Override
     public String deleteMovie(int id) throws MovieNotFoundException {
-            if (movieRepository.existsById(id)) {
+            if (movieRepository.existsById(id))
+            {
                 movieRepository.deleteById(id);
                 return "Succesfully deleted";
             } else

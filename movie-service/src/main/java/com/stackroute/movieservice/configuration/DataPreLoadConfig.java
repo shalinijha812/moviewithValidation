@@ -19,16 +19,16 @@ public class DataPreLoadConfig implements ApplicationListener<ContextRefreshedEv
     @Override
     public void run(String... args) throws Exception {
         Movie movie = new Movie(4, "Titanic", "English", "Ultimate movie");
-        movieRepository.save(movie);
+        movieRepository.insert(movie);
     }
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
         Movie movie = new Movie(1, "3idiots", "hindi", "best movie");
-        movieRepository.save(movie);
+        movieRepository.insert(movie);
         movie = new Movie(2, "Guru", "hindi", "avg movie");
-        movieRepository.save(movie);
+        movieRepository.insert(movie);
         movie = new Movie(3, "Dangal", "hindi", "awesome movie");
-        movieRepository.save(movie);
+        movieRepository.insert(movie);
     }
 }

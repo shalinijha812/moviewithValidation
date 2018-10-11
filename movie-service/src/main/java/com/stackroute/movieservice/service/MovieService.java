@@ -7,7 +7,7 @@ import com.stackroute.movieservice.exception.MovieNotFoundException;
 import java.util.List;
 
 public interface MovieService {
-    public Movie saveMovie(Movie movie) throws MovieAlreadyExistsException;
+    public Movie insertMovie(Movie movie) throws MovieAlreadyExistsException;
     //public void viewInfo();
     public Movie updateComments(int id,String comments) throws MovieNotFoundException;
     public String deleteMovie(int id) throws MovieNotFoundException;

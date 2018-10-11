@@ -24,11 +24,11 @@ public class MovieController {
     }
 
     @PostMapping()
-    public ResponseEntity<?> saveMovie(@RequestBody Movie movie) {
+    public ResponseEntity<?> insertMovie(@RequestBody Movie movie) {
         ResponseEntity responseEntity;
         try {
-            Movie savedMovie = movieService.saveMovie(movie);
-            responseEntity = new ResponseEntity<Movie>(savedMovie, HttpStatus.CREATED);
+            Movie insertdMovie = movieService.insertMovie(movie);
+            responseEntity = new ResponseEntity<Movie>(insertdMovie, HttpStatus.CREATED);
         }
         catch(MovieAlreadyExistsException e)
         {
@@ -37,9 +37,9 @@ public class MovieController {
         return responseEntity;
     }
 //    @PostMapping("movie/list")
-//    public  ResponseEntity<?> saveMoreMovies(@RequestBody List<Movie> listMovies) {
+//    public  ResponseEntity<?> insertMoreMovies(@RequestBody List<Movie> listMovies) {
 //        for(int i=0;i<listMovies.size();i++) {
-//            Movie savedMovie = movieService.saveMovie(listMovies.get(i));
+//            Movie insertdMovie = movieService.insertMovie(listMovies.get(i));
 //        }
 //        ResponseEntity responseEntity = new ResponseEntity<List<Movie >>(movieService.getAllMovie(), HttpStatus.OK);
 //

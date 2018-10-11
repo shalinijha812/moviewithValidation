@@ -13,6 +13,7 @@ import org.mockito.MockitoAnnotations;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
@@ -46,35 +47,54 @@ public class MovieServiceTest {
 
     }
     @Test
-    public void saveMovieTestSuccess() throws MovieAlreadyExistsException {
+    public void insertMovieTestSuccess() throws MovieAlreadyExistsException {
 
-        when(movieRepository.save((Movie) any())).thenReturn(movie);
-        Movie savedMovie = movieService.saveMovie(movie);
-        Assert.assertEquals(movie,savedMovie);
+        when(movieRepository.insert((Movie) any())).thenReturn(movie);
+        Movie insertdMovie = movieService.insertMovie(movie);
+        Assert.assertEquals(movie,insertdMovie);
 
-        //verify here verifies that userRepository save method is only called once
-        verify(movieRepository,times(1)).save(movie);
+        //verify here verifies that userRepository insert method is only called once
+        verify(movieRepository,times(1)).insert(movie);
 
     }
     @Test(expected = MovieAlreadyExistsException.class)
-    public void saveMovieTestFailure() throws MovieAlreadyExistsException {
-        when(movieRepository.save((Movie) any())).thenReturn(null);
-        Movie savedMovie = movieService.saveMovie(movie);
-        System.out.println("savedMovie" + savedMovie);
-        Assert.assertEquals(movie, savedMovie);
+    public void insertMovieTestFailure() throws MovieAlreadyExistsException {
+        when(movieRepository.insert((Movie) any())).thenReturn(null);
+        Movie insertdMovie = movieService.insertMovie(movie);
+        System.out.println("insertdMovie" + insertdMovie);
+        Assert.assertEquals(movie, insertdMovie);
     }
-    @Test(expected=MovieNotFoundException.class)
-   public void updateMovieTest()throws MovieAlreadyExistsException,MovieNotFoundException {
-        //movieRepository.save(movie);
-
-        movieRepository.save(movie);
+    @Test(expected= NoSuchElementException.class)
+   public void updateMovieSuccessTest()throws MovieAlreadyExistsException,MovieNotFoundException {
+        //movieRepository.insert(movie);
+        when(movieRepository.existsById(movie.getId())).thenReturn(true);
+        when(movieRepository.findById(movie.getId()).get()).thenReturn(movie);
+        when(movieRepository.insert((Movie) any())).thenReturn(movie);
+        Movie insertdMovie = movieService.insertMovie(movie);
+        //movieRepository.insert(movie);
         Movie updatedMovie = movieService.updateComments(movie.getId(), "bad movie");
-        Assert.assertEquals("bad movie", updatedMovie.getComments());
+        Assert.assertEquals(movie.getComments(), updatedMovie.getComments());
+        verify(movieRepository,times(1)).insert(movie);
     }
+
+    @Test(expected=MovieNotFoundException.class)
+    public void updateMovieFailureTest()throws MovieAlreadyExistsException,MovieNotFoundException {
+        //movieRepository.insert(movie);
+        when(movieRepository.existsById(movie.getId())).thenReturn(false);
+        Movie updatedMovie = movieService.updateComments(movie.getId(), "bad movie");
+//        when(movieRepository.findById(movie.getId()).get()).thenReturn(movie);
+//
+        //Movie insertdMovie = movieService.insertMovie(movie);
+        //movieRepository.insert(movie);
+
+//        Assert.assertEquals(movie.getComments(), updatedMovie.getComments());
+//        verify(movieRepository,times(1)).insert(movie);
+    }
+
 
 //        updatedMovie.setComments("1 star movie");
-//        Movie updatedSavedMovie = movieRepository.save(updatedMovie);
-//        Assert.assertEquals("1 star movie",updatedSavedMovie.getComments());
+//        Movie updatedInsertdMovie = movieRepository.insert(updatedMovie);
+//        Assert.assertEquals("1 star movie",updatedInsertdMovie.getComments());
 
 
 
@@ -86,7 +106,7 @@ public class MovieServiceTest {
     public void getallMovieTest()
    {
 
-        movieRepository.save(movie);
+        movieRepository.insert(movie);
         //stubbing the mock to return specific data
         when(movieRepository.findAll()).thenReturn(list);
         List<Movie> movielist = movieService.getAllMovie();
@@ -94,17 +114,42 @@ public class MovieServiceTest {
 
         //add verify
     }
-    @Test(expected=MovieNotFoundException.class)
-    public void  deleteMovieTest()throws MovieNotFoundException,MovieAlreadyExistsException{
+    @Test
+    public void  deleteMovieSuccess()throws MovieNotFoundException,MovieAlreadyExistsException {
+        movieRepository.insert(movie);
 
-
-            Movie savedMovie = movieRepository.save(movie);
-//        Movie movie2 = new Movie(6,"Raaz","hindi","2 star");
-//        movieRepository.save(movie2);
-            String expectedmsg = movieService.deleteMovie(movie.getId());
-            Assert.assertEquals(expectedmsg, "Succesfully deleted");
-
+        when(movieRepository.existsById(movie.getId())).thenReturn(true);
+        String expectedmsg = movieService.deleteMovie(movie.getId());
+        Assert.assertEquals(expectedmsg, "Succesfully deleted");
+        verify(movieRepository, times(1)).deleteById(movie.getId());
     }
+    @Test(expected=MovieNotFoundException.class)
+    public void  deleteMovieFailure()throws MovieNotFoundException {
+        //movieRepository.insert(movie);
+        when(movieRepository.existsById(movie.getId())).thenReturn(false);
+        movieService.deleteMovie(movie.getId());
+    }
+     @Test
+    public void searchMovieSuccess()throws MovieNotFoundException{
+        when(movieRepository.existsById(movie.getId())).thenReturn(true);
+         when(movieRepository.findByTitle(movie.getTitle())).thenReturn(movie);
+         Movie searchedMovie=movieService.searchMovieByName(movie.getTitle());
+    }
+    @Test(expected =MovieNotFoundException.class)
+    public void searchMovieFailure()throws MovieNotFoundException{
+        when(movieRepository.existsById(movie.getId())).thenReturn(false);
+        when(movieRepository.findByTitle(movie.getTitle())).thenReturn(null);
+        Movie searchedMovie=movieService.searchMovieByName(movie.getTitle());
+    }//movieRepository.deleteById(insertdMovie.getId());
+
+//       Movie movie2 = new Movie(6,"Raaz","hindi","2 star");
+//        movieRepository.insert(movie2);
+//           String expectedmsg = movieService.deleteMovie(movie.getId());
+//            Assert.assertEquals(expectedmsg, "Succesfully deleted");
+
+
+
+
 
 
 
